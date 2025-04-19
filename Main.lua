@@ -1,32 +1,275 @@
-Here’s the script formatted for easier use in your Roblox project:
-
-```lua
-local TweenService = game:GetService("TweenService")
-local UserInputService = game:GetService("UserInputService")
-
--- Define UI elements
-local ScreenGui = script.Parent
-local MainFrame = ScreenGui.MainFrame
-local Shadow = ScreenGui.Shadow
-local TopBar = MainFrame.TopBar
-local CloseButton = MainFrame.CloseButton
-local LoadButton = MainFrame.LoadButton
-local VerifyButton = MainFrame.VerifyButton
-local KeyInput = MainFrame.KeyInput
-local StatusLabel = MainFrame.StatusLabel
-local KeyIcon = MainFrame.KeyIcon
-local UIStroke = MainFrame.UIStroke
-local UIStroke_KeyInput = KeyInput.UIStroke
-local UIGradient_Load = LoadButton.UIGradient
-local UIGradient_Verify = VerifyButton.UIGradient
-local UICorner_Load = LoadButton.UICorner
-local MainContentFrame = ScreenGui.MainContentFrame
-local KeySystemFrame = ScreenGui.KeySystemFrame
-local correctKey = "yourCorrectKeyHere"
-
--- Load script functionality
 local function loadScript()
-    -- Set up UI properties
+    -- Services
+    local Players = game:GetService("Players")
+    local UserInputService = game:GetService("UserInputService")
+    local TweenService = game:GetService("TweenService")
+    local RunService = game:GetService("RunService")
+    
+    -- Key System Configuration
+    local correctKey = "Sweb123" -- Fixed key
+    
+    -- Instances
+    local ScreenGui = Instance.new("ScreenGui")
+    local MainFrame = Instance.new("Frame")
+    local UICorner = Instance.new("UICorner")
+    local TopBar = Instance.new("Frame")
+    local UICorner_TopBar = Instance.new("UICorner")
+    local Title = Instance.new("TextLabel")
+    local CloseButton = Instance.new("TextButton")
+    local UICorner_Close = Instance.new("UICorner")
+    local ContentFrame = Instance.new("Frame")
+    local UICorner_Content = Instance.new("UICorner")
+    local KeySystemFrame = Instance.new("Frame")
+    local UICorner_KeySystem = Instance.new("UICorner")
+    local KeyLabel = Instance.new("TextLabel")
+    local KeyInput = Instance.new("TextBox")
+    local UICorner_KeyInput = Instance.new("UICorner")
+    local UIStroke_KeyInput = Instance.new("UIStroke")
+    local VerifyButton = Instance.new("TextButton")
+    local UICorner_Verify = Instance.new("UICorner")
+    local UIGradient_Verify = Instance.new("UIGradient")
+    local StatusLabel = Instance.new("TextLabel")
+    local KeyIcon = Instance.new("ImageLabel")
+    local MainContentFrame = Instance.new("Frame")
+    local UICorner_MainContent = Instance.new("UICorner")
+    local ScriptLabel = Instance.new("TextLabel")
+    local LoadButton = Instance.new("TextButton")
+    local UICorner_Load = Instance.new("UICorner")
+    local UIGradient_Load = Instance.new("UIGradient")
+    local UIStroke = Instance.new("UIStroke")
+    local Shadow = Instance.new("ImageLabel")
+    local Particles = Instance.new("Frame")
+    
+    -- Properties
+    ScreenGui.Name = "SwebScriptGUI"
+    ScreenGui.Parent = game:GetService("CoreGui")
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    ScreenGui.DisplayOrder = 9999
+    ScreenGui.ResetOnSpawn = false
+    
+    Shadow.Name = "Shadow"
+    Shadow.Parent = ScreenGui
+    Shadow.AnchorPoint = Vector2.new(0.5, 0.5)
+    Shadow.BackgroundTransparency = 1
+    Shadow.Position = UDim2.new(0.5, 0, 0.5, 0)
+    Shadow.Size = UDim2.new(0, 450, 0, 300)
+    Shadow.Image = "rbxassetid://6014261993"
+    Shadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+    Shadow.ImageTransparency = 0.5
+    Shadow.ScaleType = Enum.ScaleType.Slice
+    Shadow.SliceCenter = Rect.new(49, 49, 450, 450)
+    
+    MainFrame.Name = "MainFrame"
+    MainFrame.Parent = ScreenGui
+    MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+    MainFrame.BorderSizePixel = 0
+    MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+    MainFrame.Size = UDim2.new(0, 420, 0, 270)
+    MainFrame.ClipsDescendants = true
+    
+    UICorner.CornerRadius = UDim.new(0, 10)
+    UICorner.Parent = MainFrame
+    
+    UIStroke.Parent = MainFrame
+    UIStroke.Color = Color3.fromRGB(65, 105, 225)
+    UIStroke.Thickness = 2
+    UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    
+    -- Particles for visual effect
+    Particles.Name = "Particles"
+    Particles.Parent = MainFrame
+    Particles.BackgroundTransparency = 1
+    Particles.Size = UDim2.new(1, 0, 1, 0)
+    Particles.ZIndex = 0
+    
+    -- Create particle effects
+    for i = 1, 15 do
+        local particle = Instance.new("Frame")
+        particle.BackgroundColor3 = Color3.fromRGB(65, 105, 225)
+        particle.BackgroundTransparency = 0.8
+        particle.BorderSizePixel = 0
+        particle.Size = UDim2.new(0, math.random(2, 5), 0, math.random(2, 5))
+        particle.Position = UDim2.new(math.random(), 0, math.random(), 0)
+        particle.ZIndex = 0
+        
+        local particleCorner = Instance.new("UICorner")
+        particleCorner.CornerRadius = UDim.new(1, 0)
+        particleCorner.Parent = particle
+        
+        particle.Parent = Particles
+        
+        -- Animate particles
+        spawn(function()
+            while true do
+                local randomDuration = math.random(3, 8)
+                local targetX = math.random()
+                local targetY = math.random()
+                
+                TweenService:Create(particle, TweenInfo.new(randomDuration, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                    Position = UDim2.new(targetX, 0, targetY, 0),
+                    BackgroundTransparency = math.random(70, 95)/100
+                }):Play()
+                
+                wait(randomDuration - 0.1)
+            end
+        end)
+    end
+    
+    TopBar.Name = "TopBar"
+    TopBar.Parent = MainFrame
+    TopBar.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
+    TopBar.BorderSizePixel = 0
+    TopBar.Size = UDim2.new(1, 0, 0, 40)
+    
+    UICorner_TopBar.CornerRadius = UDim.new(0, 10)
+    UICorner_TopBar.Parent = TopBar
+    
+    Title.Name = "Title"
+    Title.Parent = TopBar
+    Title.BackgroundTransparency = 1
+    Title.Position = UDim2.new(0, 15, 0, 0)
+    Title.Size = UDim2.new(0, 200, 1, 0)
+    Title.Font = Enum.Font.GothamBold
+    Title.Text = "SwebScript Rivals"
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.TextSize = 18
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+    
+    CloseButton.Name = "CloseButton"
+    CloseButton.Parent = TopBar
+    CloseButton.BackgroundColor3 = Color3.fromRGB(255, 80, 80)
+    CloseButton.Position = UDim2.new(1, -35, 0.5, -12)
+    CloseButton.Size = UDim2.new(0, 24, 0, 24)
+    CloseButton.Font = Enum.Font.GothamBold
+    CloseButton.Text = "X"
+    CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    CloseButton.TextSize = 14
+    CloseButton.AutoButtonColor = false
+    
+    UICorner_Close.CornerRadius = UDim.new(1, 0)
+    UICorner_Close.Parent = CloseButton
+    
+    ContentFrame.Name = "ContentFrame"
+    ContentFrame.Parent = MainFrame
+    ContentFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+    ContentFrame.BorderSizePixel = 0
+    ContentFrame.Position = UDim2.new(0, 15, 0, 55)
+    ContentFrame.Size = UDim2.new(1, -30, 1, -70)
+    
+    UICorner_Content.CornerRadius = UDim.new(0, 8)
+    UICorner_Content.Parent = ContentFrame
+    
+    -- Key System Frame
+    KeySystemFrame.Name = "KeySystemFrame"
+    KeySystemFrame.Parent = ContentFrame
+    KeySystemFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+    KeySystemFrame.BorderSizePixel = 0
+    KeySystemFrame.Size = UDim2.new(1, 0, 1, 0)
+    KeySystemFrame.ZIndex = 2
+    
+    UICorner_KeySystem.CornerRadius = UDim.new(0, 8)
+    UICorner_KeySystem.Parent = KeySystemFrame
+    
+    KeyIcon.Name = "KeyIcon"
+    KeyIcon.Parent = KeySystemFrame
+    KeyIcon.BackgroundTransparency = 1
+    KeyIcon.Position = UDim2.new(0.5, -30, 0, 15)
+    KeyIcon.Size = UDim2.new(0, 60, 0, 60)
+    KeyIcon.Image = "rbxassetid://7734010488"
+    KeyIcon.ImageColor3 = Color3.fromRGB(65, 105, 225)
+    
+    KeyLabel.Name = "KeyLabel"
+    KeyLabel.Parent = KeySystemFrame
+    KeyLabel.BackgroundTransparency = 1
+    KeyLabel.Position = UDim2.new(0, 0, 0, 80)
+    KeyLabel.Size = UDim2.new(1, 0, 0, 30)
+    KeyLabel.Font = Enum.Font.GothamBold
+    KeyLabel.Text = "Authentication Required"
+    KeyLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    KeyLabel.TextSize = 18
+    
+    KeyInput.Name = "KeyInput"
+    KeyInput.Parent = KeySystemFrame
+    KeyInput.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
+    KeyInput.Position = UDim2.new(0.5, -125, 0, 120)
+    KeyInput.Size = UDim2.new(0, 250, 0, 40)
+    KeyInput.Font = Enum.Font.Gotham
+    KeyInput.PlaceholderText = "Enter your key here..."
+    KeyInput.Text = ""
+    KeyInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+    KeyInput.TextSize = 14
+    KeyInput.ClearTextOnFocus = false
+    
+    UICorner_KeyInput.CornerRadius = UDim.new(0, 6)
+    UICorner_KeyInput.Parent = KeyInput
+    
+    UIStroke_KeyInput.Parent = KeyInput
+    UIStroke_KeyInput.Color = Color3.fromRGB(65, 105, 225)
+    UIStroke_KeyInput.Thickness = 1
+    UIStroke_KeyInput.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    
+    VerifyButton.Name = "VerifyButton"
+    VerifyButton.Parent = KeySystemFrame
+    VerifyButton.BackgroundColor3 = Color3.fromRGB(65, 105, 225)
+    VerifyButton.Position = UDim2.new(0.5, -75, 0, 175)
+    VerifyButton.Size = UDim2.new(0, 150, 0, 40)
+    VerifyButton.Font = Enum.Font.GothamBold
+    VerifyButton.Text = "VERIFY"
+    VerifyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    VerifyButton.TextSize = 16
+    VerifyButton.AutoButtonColor = false
+    
+    UICorner_Verify.CornerRadius = UDim.new(0, 6)
+    UICorner_Verify.Parent = VerifyButton
+    
+    UIGradient_Verify.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(65, 105, 225)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(100, 140, 255))
+    }
+    UIGradient_Verify.Rotation = 45
+    UIGradient_Verify.Parent = VerifyButton
+    
+    StatusLabel.Name = "StatusLabel"
+    StatusLabel.Parent = KeySystemFrame
+    StatusLabel.BackgroundTransparency = 1
+    StatusLabel.Position = UDim2.new(0, 0, 0, 225)
+    StatusLabel.Size = UDim2.new(1, 0, 0, 20)
+    StatusLabel.Font = Enum.Font.Gotham
+    StatusLabel.Text = ""
+    StatusLabel.TextColor3 = Color3.fromRGB(255, 80, 80)
+    StatusLabel.TextSize = 14
+    
+    -- Main Content Frame (hidden initially)
+    MainContentFrame.Name = "MainContentFrame"
+    MainContentFrame.Parent = ContentFrame
+    MainContentFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+    MainContentFrame.BorderSizePixel = 0
+    MainContentFrame.Size = UDim2.new(1, 0, 1, 0)
+    MainContentFrame.Visible = false
+    
+    UICorner_MainContent.CornerRadius = UDim.new(0, 8)
+    UICorner_MainContent.Parent = MainContentFrame
+    
+    ScriptLabel.Name = "ScriptLabel"
+    ScriptLabel.Parent = MainContentFrame
+    ScriptLabel.BackgroundTransparency = 1
+    ScriptLabel.Position = UDim2.new(0, 20, 0, 20)
+    ScriptLabel.Size = UDim2.new(1, -40, 0, 60)
+    ScriptLabel.Font = Enum.Font.Gotham
+    ScriptLabel.Text = "Rivals Script v2.1\nUnlock all features and dominate the game!"
+    ScriptLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+    ScriptLabel.TextSize = 16
+    ScriptLabel.TextXAlignment = Enum.TextXAlignment.Left
+    ScriptLabel.TextYAlignment = Enum.TextYAlignment.Top
+    
+    LoadButton.Name = "LoadButton"
+    LoadButton.Parent = MainContentFrame
+    LoadButton.BackgroundColor3 = Color3.fromRGB(65, 105, 225)
+    LoadButton.Position = UDim2.new(0.5, -75, 1, -80)
+    LoadButton.Size = UDim2.new(0, 150, 0, 45)
+    LoadButton.Font = Enum.Font.GothamBold
+    LoadButton.Text = "LOAD SCRIPT"
     LoadButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     LoadButton.TextSize = 16
     LoadButton.AutoButtonColor = false
@@ -337,6 +580,3 @@ local function loadScript()
 end
 
 loadScript()
-```
-
-You can paste this code into a Script object in Roblox Studio, and it should work properly within the defined UI structure. Let me know if you'd like any changes!
